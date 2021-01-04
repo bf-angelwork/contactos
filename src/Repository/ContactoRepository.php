@@ -57,7 +57,7 @@ class ContactoRepository extends ServiceEntityRepository
         return $qb->execute();
     }
 
-    public function findEdadMayorQue($edad): array{
+    public function findByEdadMayorQue($edad): array{
         $qb = $this->createQueryBuilder('p')
         ->andWhere('p.edad > :edad')
         ->setParameter('edad', $edad)
@@ -65,4 +65,6 @@ class ContactoRepository extends ServiceEntityRepository
 
         return $qb->execute();
     }
+
+    
 }

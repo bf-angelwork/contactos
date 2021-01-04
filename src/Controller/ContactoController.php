@@ -39,9 +39,9 @@ class ContactoController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
 
         $contacto = new Contacto();
-        $contacto->setNombre("Inserción de prueba");
+        $contacto->setNombre("Luis");
         $contacto->setTelefono("900110011");
-        $contacto->setEmail("insercion.de.prueba@contacto.es");
+        $contacto->setEmail("luis@contacto.es");
 
         $entityManager->persist($contacto);
         $entityManager->flush();
@@ -113,13 +113,55 @@ class ContactoController extends AbstractController
     /*
     public function buscarMayores($codigo)
     {
-        $repositorio = $this->getDoctrine()->getRepository(Contacto::class);
-        $resultado = $repositorio->findEdadMayorQue($codigo);
+      $repositorio = $this->getDoctrine()->getRepository(Contacto::class);
+        $resultado = $repositorio->findByEdadMayorQue($codigo);
         
         return $this->render('lista_contactos.html.twig', array(
         'contactos' => $resultado
         ));
     }*/
+
+    /**
+     * @Route("/alterarTelef/{codigo}", name="actualizar_telef")
+     */
+    public function actualizarTelef($telef){
+        
+            $entityManager = $this->getDoctrine()->getManager();
+            $repositorio = $this->getDoctrine()->getRepository(Contacto::class);
+            $contacto = $repositorio->find(1);
+            if ($contacto)
+            {
+                $contacto->setTelefono($telef);
+                $entityManager->flush();
+                
+            }
+         
+            return $this->render('resultadoCorrecto.html.twig', array(
+                'contactos' => $contacto
+                ));
+    }
+
+    /**
+     * @Route("/alterarTelef2/{codigo}/{telef}", name="actualizar_telef2")
+     */
+    public function actualizarTelef2($codigo,$telef){
+        
+        $entityManager = $this->getDoctrine()->getManager();
+        $repositorio = $this->getDoctrine()->getRepository(Contacto::class);
+        $contacto = $repositorio->find($codigo);
+        if ($contacto)
+        {
+            $contacto->setTelefono($telef);
+            $entityManager->flush();
+            return $this->render('resultadoCorrecto.html.twig', array(
+            'contactos' => $contacto
+            ));
+        }
+        else
+        return $this->render('ficha_contacto.html.twig',
+        array('contacto' => NULL));
+       
+    }
     
 }
 
