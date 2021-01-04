@@ -47,4 +47,22 @@ class ContactoRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function findByName($text): array
+    {
+        $qb = $this->createQueryBuilder('c')
+        ->andWhere('c.nombre LIKE :text')
+        ->setParameter('text', '%' . $text . '%')
+        ->getQuery();
+
+        return $qb->execute();
+    }
+
+    public function findEdadMayorQue($edad): array{
+        $qb = $this->createQueryBuilder('p')
+        ->andWhere('p.edad > :edad')
+        ->setParameter('edad', $edad)
+        ->getQuery();
+
+        return $qb->execute();
+    }
 }

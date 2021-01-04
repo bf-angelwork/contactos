@@ -52,7 +52,20 @@ class ContactoController extends AbstractController
     /**
     * @Route("/contacto/{codigo}", name="ficha_contacto",requirements={"codigo"="\d+"})
     */
-    public function ficha($codigo = 1)
+    public function ficha($codigo)
+    {
+        $repositorio =
+        $this->getDoctrine()->getRepository(Contacto::class);
+        $contacto = $repositorio->find($codigo);
+
+        if ($contacto)
+            return $this->render('ficha_contacto.html.twig',
+            array('contacto' => $contacto));
+        else
+            return $this->render('ficha_contacto.html.twig',
+            array('contacto' => NULL));
+    }
+   /* public function ficha($codigo = 1)
         {
             $resultado = array_filter($this->contactos,
             function($contacto) use ($codigo)
@@ -67,7 +80,7 @@ class ContactoController extends AbstractController
              return $this->render('ficha_contacto.html.twig', array(
                     'contacto' => NULL
                         ));      
-    }
+    }*/
 
 
 
@@ -76,6 +89,14 @@ class ContactoController extends AbstractController
     */
     public function buscar($texto)
     {
+        $repositorio = $this->getDoctrine()->getRepository(Contacto::class);
+        $resultado = $repositorio->findByName($texto);
+
+        return $this->render('lista_contactos.html.twig', array(
+        'contactos' => $resultado
+        ));
+    }
+    /*{
         $resultado = array_filter($this->contactos,
         function($contacto) use ($texto)
             {
@@ -84,8 +105,21 @@ class ContactoController extends AbstractController
         return $this->render('lista_contactos.html.twig', array(
                 'contactos' => $resultado
                      ));
-    }
-
+    }*/
+      
+    
+    // @Route("/contactoEdad/{codigo}", name="edad_contacto",requirements={"codigo"="\d+"})
+    
+    /*
+    public function buscarMayores($codigo)
+    {
+        $repositorio = $this->getDoctrine()->getRepository(Contacto::class);
+        $resultado = $repositorio->findEdadMayorQue($codigo);
+        
+        return $this->render('lista_contactos.html.twig', array(
+        'contactos' => $resultado
+        ));
+    }*/
     
 }
 
