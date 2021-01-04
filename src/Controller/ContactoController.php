@@ -5,6 +5,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Service\BDPrueba;
+use App\Entity\Contacto;
 
 class ContactoController extends AbstractController
 {
@@ -29,7 +30,23 @@ class ContactoController extends AbstractController
         "telefono" => "638765432", "email" => "norajover@hotmail.com"),
         );*/
 
-   
+    /**
+    * @Route("/contacto/insertar", name="insertar_contacto")
+    */
+    public function insertar()
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $contacto = new Contacto();
+        $contacto->setNombre("Inserción de prueba");
+        $contacto->setTelefono("900110011");
+        $contacto->setEmail("insercion.de.prueba@contacto.es");
+
+        $entityManager->persist($contacto);
+        $entityManager->flush();
+
+        return new Response("Contacto insertado con id " . $contacto->getId());
+    }
 
 
     /**
