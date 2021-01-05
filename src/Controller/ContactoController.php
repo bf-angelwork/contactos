@@ -6,6 +6,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Service\BDPrueba;
 use App\Entity\Contacto;
+use App\Entity\Provincia;
 
 class ContactoController extends AbstractController
 {
@@ -38,12 +39,18 @@ class ContactoController extends AbstractController
     {
         $entityManager = $this->getDoctrine()->getManager();
 
-        $contacto = new Contacto();
-        $contacto->setNombre("Luis");
-        $contacto->setTelefono("900110011");
-        $contacto->setEmail("luis@contacto.es");
+        $provincia = new Provincia();
+        $provincia->setNombre("Alicante");
 
+        $contacto = new Contacto();
+        $contacto->setNombre("JefazoP");
+        $contacto->setTelefono("900110011");
+        $contacto->setEmail("JeefazoP@contacto.es");
+        $contacto->setProvincia($provincia);
+
+        $entityManager->persist($provincia);
         $entityManager->persist($contacto);
+
         $entityManager->flush();
 
         return new Response("Contacto insertado con id " . $contacto->getId());
