@@ -31,6 +31,12 @@ class Contacto
      */
     private $email;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Provincia::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $provincia;
+
     public function getId()
     {
         return $this->id;
@@ -68,6 +74,18 @@ class Contacto
     public function setEmail(string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getProvincia(): ?Provincia
+    {
+        return $this->provincia;
+    }
+
+    public function setProvincia(?Provincia $provincia): self
+    {
+        $this->provincia = $provincia;
 
         return $this;
     }
