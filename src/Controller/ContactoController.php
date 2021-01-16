@@ -7,12 +7,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Service\BDPrueba;
 use App\Entity\Contacto;
 use App\Entity\Provincia;
-//contacto/nuevo
+//P5
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType; 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use App\Form\ContactoType;
+
 
 class ContactoController extends AbstractController
 {
@@ -67,7 +70,7 @@ class ContactoController extends AbstractController
     public function nuevo(Request $request)
     {
         $contacto = new Contacto();
-        
+        /*
         $formulario = $this->createFormBuilder($contacto)
             ->add('nombre', TextType::class)
             ->add('telefono', TextType::class)
@@ -76,6 +79,9 @@ class ContactoController extends AbstractController
             ))
             ->add('save', SubmitType::class, array('label' => 'Enviar'))
             ->getForm();
+
+        */
+        $formulario = $this->createForm(ContactoType::class, $contacto);
         
         $formulario->handleRequest($request);
         
@@ -91,7 +97,29 @@ class ContactoController extends AbstractController
         ));
     }
 
+    /**
+* @Route("/contacto/editar/{codigo}", name="editar_contacto", requirements={"codigo"="\d+"})
+*/
+public function editar(Request $request, $codigo)
+{
+    $repositorio = $this->getDoctrine()->getRepository(Contacto::class);
+    $contacto = $repositorio->find($codigo);
+
+    $formulario = $this->createForm(ContactoType::class, $contacto);
     
+    $formulario->handleRequest($request);
+    
+    if ($formulario->isSubmitted() && $formulario->isValid())
+    {
+        $contacto = $formulario->getData();
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($contacto);
+        $entityManager->flush();
+        return $this->redirectToRoute('inicio');
+    }
+        return $this->render('nuevo.html.twig', array( 'formulario' => $formulario->createView()
+    ));
+}
 
     /**
     * @Route("/contacto/{codigo}", name="ficha_contacto",requirements={"codigo"="\d+"})
