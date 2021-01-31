@@ -1,92 +1,71 @@
 <?php
-
 namespace App\Entity;
 
-use App\Repository\UsuarioRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @ORM\Entity(repositoryClass=UsuarioRepository::class)
- */
-class Usuario
+* @ORM\Entity(repositoryClass="App\Repository\UsuarioRepository")
+*/
+class Usuario implements UserInterface, \Serializable
 {
     /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    * @ORM\Id()
+    * @ORM\GeneratedValue()
+    * @ORM\Column(type="integer")
+    */
     private $id;
-
     /**
-     * @ORM\Column(type="string", length=100)
-     */
+    * @ORM\Column(type="string", length=100)
+    */
     private $login;
-
     /**
-     * @ORM\Column(type="string", length=100)
-     */
+    * @ORM\Column(type="string", length=100)
+    */
     private $password;
-
     /**
-     * @ORM\Column(type="string", length=100)
-     */
+    * @ORM\Column(type="string", length=100)
+    */
     private $email;
-
     /**
-     * @ORM\Column(type="string", length=20)
-     */
+    * @ORM\Column(type="string", length=20)
+    */
     private $rol;
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getLogin(): ?string
+    public function getUserName()
     {
         return $this->login;
     }
-
-    public function setLogin(string $login): self
-    {
-        $this->login = $login;
-
-        return $this;
-    }
-
-    public function getPassword(): ?string
+    public function getPassword()
     {
         return $this->password;
     }
-
-    public function setPassword(string $password): self
+    public function getSalt()
     {
-        $this->password = $password;
-
-        return $this;
+        return null;
     }
-
-    public function getEmail(): ?string
+    public function getRoles()
     {
-        return $this->email;
+        return array($this->rol);
     }
-
-    public function setEmail(string $email): self
+    public function eraseCredentials()
+        {
+        }
+    public function serialize()
     {
-        $this->email = $email;
-
-        return $this;
+        return serialize(array(
+        $this->id,
+        $this->login,
+        $this->password
+        ));
     }
-
-    public function getRol(): ?string
+    public function unserialize($datos_serializados)
     {
-        return $this->rol;
-    }
-
-    public function setRol(string $rol): self
-    {
-        $this->rol = $rol;
-
-        return $this;
+        list(
+        $this->id,
+        $this->login,
+        $this->password
+        ) = unserialize($datos_serializados,
+        array('allowed_classes' => false));
     }
 }
+?>
