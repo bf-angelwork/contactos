@@ -126,6 +126,9 @@ public function editar(Request $request, $codigo)
     */
     public function ficha($codigo)
     {
+        $this->denyAccessUnlessGranted('ROLE_USER', null,'Acceso restringido a administradores');
+
+
         $repositorio =
         $this->getDoctrine()->getRepository(Contacto::class);
         $contacto = $repositorio->find($codigo);
